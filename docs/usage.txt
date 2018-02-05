@@ -1,4 +1,4 @@
-usage : ./python opt.py <function> <args...>
+usage : python opt.py <function> <args...>
     enc <key_file> <input_file> <output_file>
         Encrypts the provided 'input_file' with key read from the 'key_file'.
         The encrypted text is written to 'output_file'.

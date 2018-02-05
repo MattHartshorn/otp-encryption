@@ -24,31 +24,25 @@ class TestCypher(unittest.TestCase):
     def test_keyToBytes(self):
         otp = cypher.otp()
         key = otp.generateKey(16)
-        self.assertEqual(len(otp.keyToBytes(key, 2)), 2)
+        self.assertEqual(len(otp.keyToBytes(key)), 2)
 
     def test_keyToBytes_invalidSize_bits(self):
         otp = cypher.otp()
         key = otp.generateKey(14)
         with self.assertRaises(Exception):
-            otp.keyToBytes(key, 2)
-
-    def test_keyToBytes_invalidSize(self):
-        otp = cypher.otp()
-        key = otp.generateKey(16)
-        with self.assertRaises(Exception):
-            otp.keyToBytes(key, 4)
+            otp.keyToBytes(key)
 
     def test_keyToBytes_type(self):
         otp = cypher.otp()
         key = 36
         with self.assertRaises(TypeError):
-            otp.keyToBytes(key, 1)
+            otp.keyToBytes(key)
 
     def test_keyToBytes_nonBinary(self):
         otp = cypher.otp()
         key = "01011001g0100101"
         with self.assertRaises(Exception):
-            otp.keyToBytes(key, 2)
+            otp.keyToBytes(key)
 
 
     def test_encrypt_length(self):
@@ -98,9 +92,6 @@ class TestCypher(unittest.TestCase):
         self.assertNotEqual(decrypted, plaintext)
 
     
-
-            
-
 
 if (__name__ == "__main__"):
     unittest.main()

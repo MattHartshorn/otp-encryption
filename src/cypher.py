@@ -1,9 +1,17 @@
 import random
 
 class otp:
+
+    # ctor : Creates a new instance of the  One Time Pad cypher.
     def __init__(self):
         random.seed()
 
+    # generateKey : Randomly generates a secret key that can be used to 
+    # encrypt/decrypt messages.
+    # @param bitSize : The number of bits the key should contain. Must be
+    # greater than zero. 
+    # @return : The generated key as binary string.
+    # @raises Exception : The bitSize is less than or equal to zero. 
     def generateKey(self, bitSize):
         if (bitSize <= 0):
             raise Exception("Invalid key size, number of bits must be greater than zero")
@@ -14,31 +22,49 @@ class otp:
 
         return key
 
+    # encrypt : Encrypts the supplied plaintext using the given key.
+    # @param plaintext : The string message to be encrypted.
+    # @param key : The key used to encrypt the message.
+    # @return : The encrypted cyphertext.
+    # @raises Exception : The binary length of the key and plaintext 
+    # don't match. 
     def encrypt(self, plaintext, key):
-        size = len(plaintext)
-        keyBytes = self.keyToBytes(key, size)
+        return self.cypher(plaintext, key)
 
-        cyphertext = ""
-        for i in range(0, size):
-            byte = ord(plaintext[i])
-            cyphertext += chr(byte ^ keyBytes[i])
-
-        return cyphertext
-
+    # decrypt : Decrypts the supplied cyphertext using the given key.
+    # @param cyphertext : The encrypted string that will be decrypted.
+    # @param key : The key used to decrypt the message.
+    # @return : The decrypted plaintext.
+    # @raises Exception : The binary length of the key and cyphertext 
+    # don't match. 
     def decrypt(self, cyphertext, key):
-        size = len(cyphertext)
-        keyBytes = self.keyToBytes(key, size)
+        return self.cypher(cyphertext, key)
 
-        plaintext = ""
+    # cypher : Encrypts or decrypts the supplied message using the given key.
+    # @param msg : The message that will be encrypted/decrypted
+    # @param key : The key used to translate the message.
+    # @return : The resulting message after encrypted/decrypted.
+    # @raises Exception : The binary length of the key and message 
+    # don't match.
+    def cypher(self, msg, key):
+        size = len(msg)
+        if (len(key) != size * 8):
+            raise Exception("Invalid key length")
+
+        keyBytes = self.keyToBytes(key)
+        res = ""
         for i in range(0, size):
-            byte = ord(cyphertext[i])
-            plaintext += chr(byte ^ keyBytes[i])
+            byte = ord(msg[i])
+            res += chr(byte ^ keyBytes[i])
 
-        return plaintext
+        return res
 
-    def keyToBytes(self, key, byteSize):
+    # keyToBytes : Converts a binary string to an array of bytes.
+    # @param key : The binary string key to be converted to byte array.
+    # @return : The byte array representation of the provided key. 
+    def keyToBytes(self, key):
         if (not isinstance(key, str)):
-            raise TypeError("Unexpected key type, expected 'string'")
+            raise TypeError("Unexpected key type, expected 'str'")
 
         # Remove whitespace from key and get size
         key = key.strip()
@@ -47,12 +73,10 @@ class otp:
         # Check length of the key
         if (keySize % 8 != 0):
             raise Exception("Invalid key length, cannot convert to byte array")
-        elif (keySize != byteSize * 8):
-            raise Exception("Invalid key length")
 
         # Convert the binary key string to byte array
         keyBytes = []
-        for i in range(0, byteSize):
+        for i in range(0, int(keySize / 8)):
             byte = key[i*8:i*8+8]
             keyBytes.append(int(byte, 2))
         

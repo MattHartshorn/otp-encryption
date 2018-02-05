@@ -8,9 +8,7 @@ class program:
 
     def run(self, args):
         if (len(args) < 2):
-            self.error("Missing function to execute")
-            self.usage()
-            return
+            self.error("Missing function to execute", True)
 
         funcName = args[1].lower()
         func = None
@@ -27,9 +25,7 @@ class program:
         elif(funcName == "keyhisto"):
             func = self.keyhisto
         else:
-            self.error("Unknown function specified: '" + funcName + "'")
-            self.usage()
-            return
+            self.error("Unknown function specified: '{0}'".format(funcName), True)
 
         self.execute(args[2:], func, argCount)
         
@@ -38,59 +34,52 @@ class program:
 
     def execute(self, args, func, argCount):
         if (len(args) < argCount):
-            self.error("Missing Arguments")
-            self.usage()
+            self.error("Missing Arguments", True)
         else:
             func(*args[:argCount])
 
     def enc(self, keyFile, plaintextFile, cyphertextFile):
-        try:             
-            cyphertext = ""
-            try:
-                key = self.readFile(keyFile)
-                plaintext = self.readFile(plaintextFile)
-                cyphertext = self.otp.encrypt(plaintext, key)
-            except Exception as e:
-                self.error(str(e))
-                self.writeFile("", cyphertextFile)
-                return
-                
-            self.writeFile(cyphertext, cyphertextFile)
-                
-        except IOError as e:
-            self.error(str(e))
+        self.cypher(keyFile, plaintextFile, cyphertextFile, True)
 
     def dec(self, keyFile, cyphertextFile, resultFile):
+        self.cypher(keyFile, cyphertextFile, resultFile, False)
+    
+    def cypher(self, keyFile, inputFile, outputFile, encrypt):
         try:             
-            resultText = ""
+            res = ""
             try:
                 key = self.readFile(keyFile)
-                cyphertext = self.readFile(cyphertextFile)
-                resultText = self.otp.decrypt(cyphertext, key)
+                msg = self.readFile(inputFile)
+                if (encrypt):
+                    res = self.otp.encrypt(msg, key)
+                else:
+                    res = self.otp.decrypt(msg, key)
             except Exception as e:
-                self.error(str(e))
-                self.writeFile("", resultFile)
-                return
+                self.writeFile("", outputFile)
+                self.error(e)
                 
-            self.writeFile(resultText, resultFile)
+            self.writeFile(res, outputFile)
                 
         except IOError as e:
-            self.error(str(e))
-    
+            self.error(e)
+
     def keygen(self, keySize, outputFile):
         try:
             key = ""
             try:
-                key += self.otp.generateKey(int(keySize))
+                size = int(keySize)
+                if (size < 1 or size > 128):
+                    self.error("Key size out of range, valid range is [1, 128]")
+
+                key += self.otp.generateKey(size)
             except Exception as e:
-                self.error(str(e))
                 self.writeFile("", outputFile)
-                return
+                self.error(e)
             
             self.writeFile(key, outputFile)
             
         except IOError as e:
-            self.error(str(e))
+            self.error(e)
 
     def keyhisto(self, keySize, keyCount, outputFile):
         try:
@@ -100,12 +89,13 @@ class program:
 
             if (count <= 0):
                 self.error("Invalid key count, must be greater than zero")
-                return
+            if (size < 1 or size > 128):
+                self.error("Key size out of range, valid range is [1, 128]")
 
             # Generate the specified number of keys
             keys = {}
             for i in range(0, count):
-                key = self.otp.generateKey(int(keySize))
+                key = self.otp.generateKey(size)
                 if (key in keys):
                     keys[key] += 1
                 else:
@@ -118,7 +108,7 @@ class program:
                     fs.write("'{0}',{1}\n".format(key, keys[key]))
             
         except Exception as e:
-            self.error(str(e))
+            self.error(e)
 
     def readFile(self, filename):
         with open(filename, 'rb') as fs:
@@ -130,5 +120,9 @@ class program:
         with open(filename, 'wb') as fs:
             return fs.write(content.encode("utf-8"))
     
-    def error(self, msg):
-        print("error: " + msg)
+    def error(self, msg, printUsage = False):
+        print("error: {0}".format(msg))
+        if (printUsage):
+            print("")
+            self.usage()
+        sys.exit()

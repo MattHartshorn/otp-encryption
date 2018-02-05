@@ -29,14 +29,14 @@ Navigate to the source directory `/src`. Run Python followed by the script `otp.
 
 ```bash
 cd ./src
-./python opt.py <function> <args...>
+python opt.py <function> <args...>
 ```
 
 Test cases can be run by navigating to the `/test` directory and running the `test-cypher.py` script.
 
 ```bash
 cd ./test
-./python test-cypher.py
+python test-cypher.py
 ```
 
 
@@ -62,7 +62,7 @@ enc <key_file> <input_file> <output_file>
 
 **Example:**
 ```bash
-./python otp.py enc ../data/key.txt ../data/message.txt ../data/cyphertext.txt
+python otp.py enc ../data/key.txt ../data/message.txt ../data/cyphertext.txt
 ```
 
 
@@ -86,7 +86,7 @@ dec <key_file> <input_file> <output_file>
 
 **Example:**
 ```bash
-./python otp.py dec ../data/key.txt ../data/cyphertext.txt ../data/result.txt
+python otp.py dec ../data/key.txt ../data/cyphertext.txt ../data/result.txt
 ```
 
 
@@ -109,7 +109,7 @@ keygen <key_size> <output_file>
 
 **Example:**
 ```bash
-./python otp.py keygen 16 ../data/key.txt
+python otp.py keygen 16 ../data/key.txt
 ```
 
 
@@ -133,5 +133,5 @@ keyhist <key_size> <count> <output_file>
 
 **Example:**
 ```bash
-./python otp.py keygen 16 100000 ../data/keyhisto.csv
+python otp.py keygen 16 100000 ../data/keyhisto.csv
 ```
