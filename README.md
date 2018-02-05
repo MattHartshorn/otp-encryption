@@ -13,16 +13,18 @@ This project illustrates the use of [One Time Pad](https://en.wikipedia.org/wiki
 Python 3.4 command line interface must be installed on the device. The download for Python can be found [here](https://www.python.org/downloads/).
 
 ## Usage
-Navigate to the source directory `/src`.
+Navigate to the source directory `/src`. Run Python followed by the script `otp.py` then specify which function you want to run and any required arguments.
 
 ```bash
 cd ./src
+./python opt.py <function> <args...>
 ```
 
-Run Python followed by the script `otp.py` then specify which function you want to run and any required arguments.
+Test cases can be run by navigating to the `/test` directory and running the `test-cypher.py` script.
 
 ```bash
-./python opt.py <function> <args...>
+cd ./test
+./python test-cypher.py
 ```
 
 ## Functions
