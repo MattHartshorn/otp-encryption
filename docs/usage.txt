@@ -1,0 +1,16 @@
+usage : ./python opt.py <function> <args...>
+    enc <key_file> <input_file> <output_file>
+        Encrypts the provided 'input_file' with key read from the 'key_file'.
+        The encrypted text is written to 'output_file'.
+
+    dec <key_file> <input_file> <output_file>
+        Decrypts the provided 'input_file' with key read from the 'key_file'.
+        The decrypted text is written to 'output_file'.
+
+    keygen <key_size> <output_file>
+        Generates a randomly generated key with 'key_size' bits and outputs
+        the key to 'output_file'.
+
+    keyhisto <key_size> <count> <output_file>
+        Generates 'count' randomly generated keys with 'key_size' bits and 
+        outputs the histogram of each unique key to 'output_file'.
