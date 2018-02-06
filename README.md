@@ -25,44 +25,70 @@ The Python 3.4 command line interface must be installed on the device. The downl
 
 
 ## Usage
-Navigate to the source directory `/src`. Run Python followed by the script `otp.py` then specify which function you want to run and any required arguments.
+Navigate to the source directory `/src`. Run Python followed by the script `otp.py` then specify which command you want to run and any required arguments.
 
 ```bash
-cd ./src
-python opt.py <function> <args...>
+> cd ./src
+> python opt.py <command> [args...]
 ```
 
-Test cases can be run by navigating to the `/test` directory and running the `test-cypher.py` script.
+Test cases can be run by navigating to the `/test` directory and running the `test.py` script.
 
 ```bash
-cd ./test
-python test-cypher.py
+> cd ./test
+> python test.py
 ```
 
 
 
-## Functions
+## Commands
 
 ### Encyrpt
 **Name:** `enc`
 
 **Description:** Encrypts the provided plaintext using the given secret key. The encrypted text is written to the given output filepath. If encryption or reading fails, an empty output file will be written.
 
+**Options:**
+| Char | Verbose     | Arg                        | Description
+|------|-------------|----------------------------|-------------------------------------------|
+| `-k` | `--key`     | `KEY`                      | Encryption key or filepath
+| `-K` | `--keytype` | `text | raw | string`      | Determines how to read the encryption key
+| `-m` | `--message` | `MSG`                      | Message to be ecrypted
+| `-i` | `--ifile`   | `FILE`                     | Filepath of the message to be encrypted
+| `-o` | `--ofile`   | `FILE`                     | Filepath the output is written to
+
+**Key Type:**
+
+`text`: Key is loaded from a UTF-8 encoded text file.
+
+`raw` : Key is loaded from a raw binary file.
+
+`string` : Key is loaded as a binary string from the command line interface
+
 **Arguments:**
-| Argument      | Description                                                            |
-|---------------|------------------------------------------------------------------------|
-| `key_file`    | The path to the file that contains the secret encyrption key.
-| `input_file`  | The path to the plaintext file to be encrypted.
-| `output_file` | The path to the output file that the encrypted text will be written to.
+| Argument| Required | Description
+|---------|----------|------------------------------------------|
+| `key`   | No*      | Encryption key or filepath
+| `ifile` | No*      | Filepath of the message to be encrypted
+| `ofile` | No       | Filepath the output is written to
+
+No* : Argument is not required if it's `option` counterpart is provided
 
 **Usage:**
 ```bash
-enc <key_file> <input_file> <output_file>
+enc [-k KEY] [-K TYPE] [-m MSG] [-i FILE] [-o FILE] [key] [ifile] [ofile]
 ```
 
-**Example:**
+**Examples:**
 ```bash
-python otp.py enc ../data/key.txt ../data/message.txt ../data/cyphertext.txt
+> python otp.py enc ../data/key ../data/plaintext ../data/cyphertext
+
+> python otp.py enc -k ../data/key -i ../data/plaintext -o ../data/cyphertext
+
+> python otp.py enc -k ../data/key -m "hello there" -o ../data/cyphertext
+
+> python otp.py enc -K string -k 0100110111010110 -m HI 
+b'\x05\xc2\x9f'
 ```
 
 
@@ -72,66 +98,82 @@ python otp.py enc ../data/key.txt ../data/message.txt ../data/cyphertext.txt
 
 **Description:** Decrypts the provided cyphertext using the given secret key. The decrypted text is written to the given output filepath. If decryption or reading fails, an empty output file will be written.
 
+**Options:**
+| Char | Verbose     | Arg                        | Description
+|------|-------------|----------------------------|--------------------------------------------|
+| `-k` | `--key`     | `KEY`                      | Encryption key or filepath
+| `-K` | `--keytype` | `text | raw | string`      | Determines how to read the encryption key
+| `-m` | `--message` | `MSG`                      | Message to be decrypted
+| `-i` | `--ifile`   | `FILE`                     | Filepath of the message to be decrypted
+| `-o` | `--ofile`   | `FILE`                     | Filepath the output is written to
+
+**Key Type:**
+
+`text`: Key is loaded from a UTF-8 encoded text file.
+
+`raw` : Key is loaded from a raw binary file.
+
+`string` : Key is loaded as a binary string from the command line interface
+
 **Arguments:**
-| Argument      | Description                                                            |
-|---------------|------------------------------------------------------------------------|
-| `key_file`    | The path to the file that contains the secret encyrption key.
-| `input_file`  | The path to the cyphertext file to be decrypted.
-| `output_file` | The path to the output file that the decrypted text will be written to.
+| Argument| Required | Description
+|---------|----------|--------------------------------|
+| `key`   | No*      | Encryption key or filepath
+| `ifile` | No*      | Filepath of the message to be encrypted
+| `ofile` | No       | Filepath the output is written to
+
+No* : Argument is not required if it's `option` counterpart is provided
 
 **Usage:**
 ```bash
-dec <key_file> <input_file> <output_file>
+dec [-k KEY] [-K TYPE] [-m MSG] [-i FILE] [-o FILE] [key] [ifile] [ofile]
 ```
 
-**Example:**
+**Examples:**
 ```bash
-python otp.py dec ../data/key.txt ../data/cyphertext.txt ../data/result.txt
-```
+> python otp.py dec ../data/key ../data/cyphertext ../data/plaintext
 
+> python otp.py dec -k ../data/key -i ../data/cyphertext -o ../data/plaintext
+
+> python otp.py dec -k ../data/key -m "hello there" -o ../data/plaintext
+
+> python otp.py dec -K string -k 0100110111010110 -i ../data/hi-cyphertext
+HI
+```
 
 
 ### Generate Key
 **Name:** `keygen`
 
-**Description:** Creates a randomly generated key based on the provided number of bits. In order to create a useable key, the key size must be divisible by 8. This allows the key to be properly divided in 8-bit sized bytes.  
+**Description:** Creates a randomly generated key based on the provided number of bits. In order to create a useable key, the number of bits in the key must be divisible by 8. This allows the key to be properly divided in 8-bit sized bytes.  
+
+**Options:**
+| Char | Verbose       | Arg    | Description
+|------|---------------|--------|-----------------------------------------|
+| `-b` | `--bytes`     |        | Specifies that the size is in bytes
+| `-e` | `--encodeBin` |        | Encodes the output key as binary
+| `-o` | `--ofile`     | `FILE` | Filepath the key is written to
 
 **Arguments:**
-| Argument      | Description                                                                        |
-|---------------|------------------------------------------------------------------------------------|
-| `key_size`    | The number of bits that the generated key will contain. Must be greater than zero.
-| `output_file` | The path to the output file that the key will be written to.
+| Argument| Required | Description
+|---------|----------|------------------------------------------|
+| `size`  | Yes      | The size of the key, default in bits
+| `ofile` | No       | Filepath the key is written to
 
 **Usage:**
 ```bash
-keygen <key_size> <output_file>
+keygen [-b] [-e] [-o FILE] <size> [ofile]
 ```
 
 **Example:**
 ```bash
-python otp.py keygen 16 ../data/key.txt
-```
+> python otp.py keygen 16 ../data/key
 
+> python otp.py keygen -b 2 -o ../data/key
 
+> python otp.py keygen -b 2
+0100111011011100
 
-### Key Histogram
-**Name:** `keyhisto`
-
-**Description:** Randomly generates the specified number of keys and counts the number of occurances of each unique key.
-
-**Arguments:**
-| Argument      | Description                                                                        |
-|---------------|------------------------------------------------------------------------------------|
-| `key_size`    | The number of bits that the generated key will contain. Must be greater than zero.
-| `count`       | The number of keys to generate.
-| `output_file` | The path to the output csv file that contains all unique keys and their count.
-
-**Usage:**
-```bash
-keyhist <key_size> <count> <output_file>
-```
-
-**Example:**
-```bash
-python otp.py keygen 16 100000 ../data/keyhisto.csv
+> python otp.py keygen -b -e 2
+b'\xf4\xfa'
 ```

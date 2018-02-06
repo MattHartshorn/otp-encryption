@@ -6,7 +6,6 @@ import sys
 import actions
 
 class Program:
-
     # Run execution
     @classmethod
     def run(cls, args = None):
@@ -21,6 +20,7 @@ class Program:
             cls.keygen(args)
         else:
             parser.print_help()
+
 
     # Encrypt & decrypt methods
     @classmethod
@@ -58,13 +58,13 @@ class Program:
     @classmethod
     def cypher_loadkey(cls, args):
         key = args.key if args.key != None else args.keyOpt[0]
-        ktype = args.keyType if isinstance(args.keyType, str) else args.keyType[0]
+        ktype = args.keytype if isinstance(args.keytype, str) else args.keytype[0]
 
-        if (ktype == "textfile"):
+        if (ktype == "text"):
             return helper.binStrToBytes(cls.read(key))
-        elif (ktype == "binfile"):
-            return cls.read(key, False)
         elif (ktype == "raw"):
+            return cls.read(key, False)
+        elif (ktype == "string"):
             return helper.binStrToBytes(key)
         else:
             raise Exception("Unknown keyType: '{0}'".format(ktype))
@@ -142,7 +142,7 @@ class Program:
         with open(filename, "wb") as fs:
             fs.write(bytes(content))
 
-
+    # Print errors
     @classmethod
     def error(cls, content):
         print("error: {0}".format(content))
@@ -162,20 +162,20 @@ class Program:
     @classmethod
     def setupCypherParser(cls, subparsers, title, help_txt, func):
         parser = subparsers.add_parser(title, help=help_txt)
+        parser.add_argument("-k", "--key", dest="keyOpt", help="Encryption key or filepath", nargs=1, metavar="KEY")
+        parser.add_argument("-K", "--keytype", help="Determines how to read the encryption key", nargs=1, metavar="TYPE", default="text", choices=["text", "raw", "string"])
         parser.add_argument("-m", "--message", help="Message text to be {0}".format(func), nargs=1, metavar="MSG")
         parser.add_argument("-i", "--ifile", dest="input", help="Filepath of the message to be {0}".format(func), nargs=1, metavar="FILE")
         parser.add_argument("-o", "--ofile", dest="output", help="Filepath the output is written to", nargs=1, metavar="FILE")
-        parser.add_argument("-k", "--key", dest="keyOpt", help="Encryption key", nargs=1, metavar="KEY")
-        parser.add_argument("-K", "--keyType", help="Determines how to read the encryption key", nargs=1, metavar="TYPE", default="textfile", choices=["textfile", "binfile", "raw"])
-        parser.add_argument("key", help="Encryption key", nargs="?")
+        parser.add_argument("key", help="Encryption key or filepath", nargs="?")
         parser.add_argument("ifile", help="Filepath of the message to be {0}".format(func), nargs="?")
         parser.add_argument("ofile", help="Filepath the output is written to", nargs="?")
 
     @classmethod
     def setupKeyGenParser(cls, subparsers):
         parser = subparsers.add_parser("keygen", help="Generates a pseudorandom encryption key")
-        parser.add_argument("-o", "--ofile", dest="output", help="Filepath the key is written to", nargs=1, metavar="FILE")
         parser.add_argument("-b", "--bytes", help="Specifies that the size is in bytes", action="store_true")
-        parser.add_argument("-e", "--encodeBin", help="Encodes the output key as binary file", action="store_true")
+        parser.add_argument("-e", "--encodeBin", help="Encodes the output key as binary", action="store_true")
+        parser.add_argument("-o", "--ofile", dest="output", help="Filepath the key is written to", nargs=1, metavar="FILE")
         parser.add_argument("size", help="The size of the key, default in bits", type=int)
         parser.add_argument("ofile", help="Filepath the key is written to", nargs="?")
