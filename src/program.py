@@ -15,10 +15,8 @@ class program:
         argCount = 3
 
         # Determine which function to run
-        if(funcName == "enc"):
-            func = self.enc
-        elif(funcName == "dec"):
-            func = self.dec
+        if(funcName == "enc" or funcName == "dec"):
+            func = self.cypher
         elif(funcName == "keygen"):
             func = self.keygen
             argCount = 2
@@ -37,23 +35,14 @@ class program:
             self.error("Missing Arguments", True)
         else:
             func(*args[:argCount])
-
-    def enc(self, keyFile, plaintextFile, cyphertextFile):
-        self.cypher(keyFile, plaintextFile, cyphertextFile, True)
-
-    def dec(self, keyFile, cyphertextFile, resultFile):
-        self.cypher(keyFile, cyphertextFile, resultFile, False)
     
-    def cypher(self, keyFile, inputFile, outputFile, encrypt):
+    def cypher(self, keyFile, inputFile, outputFile):
         try:             
             res = ""
             try:
                 key = self.readFile(keyFile)
                 msg = self.readFile(inputFile)
-                if (encrypt):
-                    res = self.otp.encrypt(msg, key)
-                else:
-                    res = self.otp.decrypt(msg, key)
+                res = self.otp.cypher(msg, key)
             except Exception as e:
                 self.writeFile("", outputFile)
                 self.error(e)
