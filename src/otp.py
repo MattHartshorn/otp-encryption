@@ -1,8 +1,7 @@
 import sys 
 import os
-import program
+from program import Program
 
 # Execute the program
 if (__name__ == "__main__"):
-    prog = program.program()
-    prog.run(sys.argv)
+    Program().run(sys.argv)
