@@ -3,16 +3,16 @@ import sys
 import os
 
 sys.path.append(os.path.abspath("../src"))
-from keygenerator import PseudorandomKey
+import keygenerator
 from helper import binStrToBytes
 
 class TestHelper(unittest.TestCase):
     def test_binStrToBytes(self):
-        key = PseudorandomKey.generate(8, True)
+        key = keygenerator.generate(8, True)
         self.assertEqual(len(binStrToBytes(key)), 8)
 
     def test_binStrToBytes_invalidSize_bits(self):
-        key = PseudorandomKey.generate(14)
+        key = keygenerator.generate(14)
         with self.assertRaises(Exception):
             binStrToBytes(key)
 

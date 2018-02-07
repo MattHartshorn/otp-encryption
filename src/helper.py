@@ -14,5 +14,5 @@ def binStrToBytes(bin):
         raise Exception("Invalid length, cannot convert to byte array")
 
     # Convert the binary key string to byte array
-    return bytes([int(bin[i*8:i*8+8], 2) for i in range(0, int(size / 8))])
+    return bytes([int(bin[i:i+8], 2) for i in range(0, size, 8)])
 
