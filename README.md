@@ -52,13 +52,13 @@ Test cases can be run by navigating to the `/test` directory and running the `te
 
 **Options:**
 
-| Char | Verbose     | Arg                   | Description
-| ---- | ----------- | --------------------- | ----------------------------------------- |
-| `-k` | `--key`     | `KEY`                 | Encryption key or filepath
-| `-K` | `--keytype` | `text | raw | string` | Determines how to read the encryption key
-| `-m` | `--message` | `MSG`                 | Message to be ecrypted
-| `-i` | `--ifile`   | `FILE`                | Filepath of the message to be encrypted
-| `-o` | `--ofile`   | `FILE`                | Filepath the output is written to
+| Char | Verbose     | Arg                     | Description
+| ---- | ----------- | ----------------------- | ----------------------------------------- |
+| `-k` | `--key`     | `KEY`                   | Encryption key or filepath
+| `-K` | `--keytype` | `text`, `raw`, `string` | Determines how to read the encryption key
+| `-m` | `--message` | `MSG`                   | Message to be ecrypted
+| `-i` | `--ifile`   | `FILE`                  | Filepath of the message to be encrypted
+| `-o` | `--ofile`   | `FILE`                  | Filepath the output is written to
 
 **Key Type:**
 
@@ -104,13 +104,13 @@ b'\x05\xc2\x9f'
 
 **Options:**
 
-| Char | Verbose     | Arg                   | Description
-| ---- | ----------- | --------------------- | ------------------------------------------ |
-| `-k` | `--key`     | `KEY`                 | Encryption key or filepath
-| `-K` | `--keytype` | `text | raw | string` | Determines how to read the encryption key
-| `-m` | `--message` | `MSG`                 | Message to be decrypted
-| `-i` | `--ifile`   | `FILE`                | Filepath of the message to be decrypted
-| `-o` | `--ofile`   | `FILE`                | Filepath the output is written to
+| Char | Verbose     | Arg                     | Description
+| ---- | ----------- | ----------------------- | ------------------------------------------ |
+| `-k` | `--key`     | `KEY`                   | Encryption key or filepath
+| `-K` | `--keytype` | `text`, `raw`, `string` | Determines how to read the encryption key
+| `-m` | `--message` | `MSG`                   | Message to be decrypted
+| `-i` | `--ifile`   | `FILE`                  | Filepath of the message to be decrypted
+| `-o` | `--ofile`   | `FILE`                  | Filepath the output is written to
 
 **Key Type:**
 
